@@ -10,6 +10,7 @@ using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Tv;
+using NzbDrone.Core.Languages;
 
 namespace NzbDrone.Core.MediaFiles.EpisodeImport
 {
@@ -94,6 +95,7 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
             ImportDecision decision = null;
 
             var fileEpisodeInfo = Parser.Parser.ParsePath(localEpisode.Path);
+                    localEpisode.Language = GetLanguage(folderInfo, localEpisode.Language, series);
 
             localEpisode.FileEpisodeInfo = fileEpisodeInfo;
             localEpisode.Size = _diskProvider.GetFileSize(localEpisode.Path);
@@ -214,7 +216,37 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
                 return true;
             }
 
-            if (fileEpisodeInfo != null && fileEpisodeInfo.IsPartialSeason)
+        private Language GetLanguage(ParsedEpisodeInfo folderInfo, Language fileLanguage, Series series)
+        {
+            if (UseFolderLanguage (folderInfo, fileLanguage, series))
+            {
+                _logger.Debug("Using language from folder: {0}", folderInfo.Language);
+                return folderInfo.Language;
+            }
+
+            return fileLanguage;
+        }
+
+        private bool UseFolderLanguage(ParsedEpisodeInfo folderInfo, Language fileLanguage, Series series)
+        {
+            if (folderInfo == null)
+            {
+                return false;
+            }
+
+            if (folderInfo.Language == Language.Unknown)
+            {
+                return false;
+            }
+
+            if (new LanguageComparer(series.LanguageProfile).Compare(folderInfo.Language, fileLanguage) > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
             {
                 return true;
             }
@@ -247,3 +279,4 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
         }
     }
 }
+
