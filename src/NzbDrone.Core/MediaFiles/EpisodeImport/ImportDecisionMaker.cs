@@ -17,6 +17,7 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
     {
         List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series);
         List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series, DownloadClientItem downloadClientItem, ParsedEpisodeInfo folderInfo, bool sceneSource);
+        List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series, DownloadClientItem downloadClientItem, ParsedEpisodeInfo folderInfo, bool sceneSource, bool filterExistingFiles);
     }
 
     public class ImportDecisionMaker : IMakeImportDecision
@@ -50,9 +51,14 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
 
         public List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series, DownloadClientItem downloadClientItem, ParsedEpisodeInfo folderInfo, bool sceneSource)
         {
-            var newFiles = _mediaFileService.FilterExistingFiles(videoFiles.ToList(), series);
+            return GetImportDecisions(videoFiles, series, downloadClientItem, folderInfo, sceneSource, true);
+        }
 
-            _logger.Debug("Analyzing {0}/{1} files.", newFiles.Count, videoFiles.Count());
+        public List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series, DownloadClientItem downloadClientItem, ParsedEpisodeInfo folderInfo, bool sceneSource, bool filterExistingFiles)
+        {
+            var files = filterExistingFiles ? _mediaFileService.FilterExistingFiles(videoFiles.ToList(), series) : videoFiles.ToList();
+
+            _logger.Debug("Analyzing {0}/{1} files.", files.Count, videoFiles.Count);
 
             ParsedEpisodeInfo downloadClientItemInfo = null;
 
@@ -65,7 +71,7 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
 
             var decisions = new List<ImportDecision>();
 
-            foreach (var file in newFiles)
+            foreach (var file in files)
             {
                 var localEpisode = new LocalEpisode
                                    {
