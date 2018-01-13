@@ -1,0 +1,14 @@
+.items {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item {
+  flex: 0 0 100%;
+}
+
+.deleteButton {
+  composes: button from 'Components/Link/Button.css';
+
+  margin-right: auto;
+}
