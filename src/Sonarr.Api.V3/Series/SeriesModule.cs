@@ -192,12 +192,9 @@ namespace Sonarr.Api.V3.Series
 
         private void LinkSeriesStatistics(SeriesResource resource, SeriesStatistics seriesStatistics)
         {
-            resource.TotalEpisodeCount = seriesStatistics.TotalEpisodeCount;
-            resource.EpisodeCount = seriesStatistics.EpisodeCount;
-            resource.EpisodeFileCount = seriesStatistics.EpisodeFileCount;
-            resource.NextAiring = seriesStatistics.NextAiring;
             resource.PreviousAiring = seriesStatistics.PreviousAiring;
-            resource.SizeOnDisk = seriesStatistics.SizeOnDisk;
+            resource.NextAiring = seriesStatistics.NextAiring;
+            resource.Statistics = seriesStatistics.ToResource();
 
             if (seriesStatistics.SeasonStatistics != null)
             {

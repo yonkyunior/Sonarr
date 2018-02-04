@@ -77,8 +77,6 @@ namespace NzbDrone.Api.Series
         public AddSeriesOptions AddOptions { get; set; }
         public Ratings Ratings { get; set; }
 
-        //TODO: Add series statistics as a property of the series (instead of individual properties)
-
         //Used to support legacy consumers
         public int QualityProfileId
         {

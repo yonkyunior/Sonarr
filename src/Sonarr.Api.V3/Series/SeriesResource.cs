@@ -28,11 +28,6 @@ namespace Sonarr.Api.V3.Series
             }
         }
 
-        public int? TotalEpisodeCount { get; set; }
-        public int? EpisodeCount { get; set; }
-        public int? EpisodeFileCount { get; set; }
-        public long? SizeOnDisk { get; set; }
-
         // V3: replace with Ended
         public SeriesStatusType Status { get; set; }
 
@@ -78,7 +73,7 @@ namespace Sonarr.Api.V3.Series
         public AddSeriesOptions AddOptions { get; set; }
         public Ratings Ratings { get; set; }
 
-        //TODO: Add series statistics as a property of the series (instead of individual properties)
+        public SeriesStatisticsResource Statistics { get; set; }
     }
 
     public static class SeriesResourceMapper
