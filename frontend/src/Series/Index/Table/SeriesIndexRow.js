@@ -73,18 +73,22 @@ class SeriesIndexRow extends Component {
       previousAiring,
       added,
       seasonCount,
-      episodeCount,
-      episodeFileCount,
-      totalEpisodeCount,
+      statistics,
       latestSeason,
       path,
-      sizeOnDisk,
       tags,
       useSceneNumbering,
       columns,
       isRefreshingSeries,
       onRefreshSeriesPress
     } = this.props;
+
+    const {
+      episodeCount,
+      episodeFileCount,
+      totalEpisodeCount,
+      sizeOnDisk
+    } = statistics;
 
     const {
       isEditSeriesModalOpen,
@@ -368,12 +372,9 @@ SeriesIndexRow.propTypes = {
   previousAiring: PropTypes.string,
   added: PropTypes.string,
   seasonCount: PropTypes.number.isRequired,
-  episodeCount: PropTypes.number,
-  episodeFileCount: PropTypes.number,
-  totalEpisodeCount: PropTypes.number,
+  statistics: PropTypes.object.isRequired,
   latestSeason: PropTypes.object,
   path: PropTypes.string.isRequired,
-  sizeOnDisk: PropTypes.number,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   useSceneNumbering: PropTypes.bool.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,

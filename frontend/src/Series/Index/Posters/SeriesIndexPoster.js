@@ -61,8 +61,7 @@ class SeriesIndexPoster extends Component {
       status,
       titleSlug,
       nextAiring,
-      episodeCount,
-      episodeFileCount,
+      statistics,
       images,
       posterWidth,
       posterHeight,
@@ -78,6 +77,12 @@ class SeriesIndexPoster extends Component {
       onRefreshSeriesPress,
       ...otherProps
     } = this.props;
+
+    const {
+      episodeCount,
+      episodeFileCount,
+      totalEpisodeCount
+    } = statistics;
 
     const {
       isEditSeriesModalOpen,
@@ -141,6 +146,7 @@ class SeriesIndexPoster extends Component {
             status={status}
             episodeCount={episodeCount}
             episodeFileCount={episodeFileCount}
+            totalEpisodeCount={totalEpisodeCount}
             posterWidth={posterWidth}
             detailedProgressBar={detailedProgressBar}
           />
@@ -215,8 +221,7 @@ SeriesIndexPoster.propTypes = {
   status: PropTypes.string.isRequired,
   titleSlug: PropTypes.string.isRequired,
   nextAiring: PropTypes.string,
-  episodeCount: PropTypes.number,
-  episodeFileCount: PropTypes.number,
+  statistics: PropTypes.object.isRequired,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
   posterWidth: PropTypes.number.isRequired,
   posterHeight: PropTypes.number.isRequired,

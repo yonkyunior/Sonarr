@@ -11,6 +11,7 @@ function SeriesIndexProgressBar(props) {
     status,
     episodeCount,
     episodeFileCount,
+    totalEpisodeCount,
     posterWidth,
     detailedProgressBar
   } = props;
@@ -27,7 +28,7 @@ function SeriesIndexProgressBar(props) {
       size={detailedProgressBar ? sizes.MEDIUM : sizes.SMALL}
       showText={detailedProgressBar}
       text={text}
-      title={detailedProgressBar ? null : text}
+      title={`${episodeFileCount} / ${episodeCount} (Total: ${totalEpisodeCount})`}
       width={posterWidth}
     />
   );
@@ -38,6 +39,7 @@ SeriesIndexProgressBar.propTypes = {
   status: PropTypes.string.isRequired,
   episodeCount: PropTypes.number.isRequired,
   episodeFileCount: PropTypes.number.isRequired,
+  totalEpisodeCount: PropTypes.number.isRequired,
   posterWidth: PropTypes.number.isRequired,
   detailedProgressBar: PropTypes.bool.isRequired
 };

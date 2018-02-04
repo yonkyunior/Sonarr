@@ -47,10 +47,14 @@ class DeleteSeriesModalContent extends Component {
     const {
       title,
       path,
-      episodeFileCount,
-      sizeOnDisk,
+      statistics,
       onModalClose
     } = this.props;
+
+    const {
+      episodeFileCount,
+      sizeOnDisk
+    } = statistics;
 
     const deleteFiles = this.state.deleteFiles;
     let deleteFilesLabel = `Delete ${episodeFileCount} Episode Files`;
@@ -126,8 +130,7 @@ class DeleteSeriesModalContent extends Component {
 DeleteSeriesModalContent.propTypes = {
   title: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
-  episodeFileCount: PropTypes.number.isRequired,
-  sizeOnDisk: PropTypes.number.isRequired,
+  statistics: PropTypes.object.isRequired,
   onDeletePress: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

@@ -171,8 +171,7 @@ class SeriesDetails extends Component {
       runtime,
       ratings,
       path,
-      sizeOnDisk,
-      episodeFileCount,
+      statistics,
       qualityProfileId,
       monitored,
       status,
@@ -195,6 +194,11 @@ class SeriesDetails extends Component {
       onRefreshPress,
       onSearchPress
     } = this.props;
+
+    const {
+      episodeFileCount,
+      sizeOnDisk
+    } = statistics;
 
     const {
       isOrganizeModalOpen,
@@ -645,8 +649,7 @@ SeriesDetails.propTypes = {
   runtime: PropTypes.number.isRequired,
   ratings: PropTypes.object.isRequired,
   path: PropTypes.string.isRequired,
-  sizeOnDisk: PropTypes.number.isRequired,
-  episodeFileCount: PropTypes.number,
+  statistics: PropTypes.object.isRequired,
   qualityProfileId: PropTypes.number.isRequired,
   monitored: PropTypes.bool.isRequired,
   status: PropTypes.string.isRequired,
