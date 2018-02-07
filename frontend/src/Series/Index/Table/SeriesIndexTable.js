@@ -1,6 +1,6 @@
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import getIndexOfFirstCharacter from 'Utilities/Array/getIndexOfFirstCharacter';
 import { sortDirections } from 'Helpers/Props';
 import VirtualTable from 'Components/Table/VirtualTable';
 import SeriesIndexItemConnector from 'Series/Index/SeriesIndexItemConnector';
@@ -11,26 +11,32 @@ import styles from './SeriesIndexTable.css';
 class SeriesIndexTable extends Component {
 
   //
-  //
-  // Control
+  // Lifecycle
 
-  scrollToFirstCharacter(character) {
-    const items = this.props.items;
+  constructor(props, context) {
+    super(props, context);
 
-    const row = _.findIndex(items, (item) => {
-      const firstCharacter = item.sortTitle.charAt(0);
+    this.state = {
+      scrollIndex: null
+    };
+  }
 
-      if (character === '#') {
-        return !isNaN(firstCharacter);
+  componentDidUpdate(prevProps) {
+    const jumpToCharacter = this.props.jumpToCharacter;
+
+    if (jumpToCharacter != null && jumpToCharacter !== prevProps.jumpToCharacter) {
+      const items = this.props.items;
+
+      const scrollIndex = getIndexOfFirstCharacter(items, jumpToCharacter);
+
+      if (scrollIndex != null) {
+        this.setState({ scrollIndex });
       }
-
-      return firstCharacter === character;
-    });
-
-    if (row != null) {
-      this._table.scrollToRow(row);
     }
   }
+
+  //
+  // Control
 
   rowRenderer = ({ key, rowIndex, style }) => {
     const {
@@ -77,6 +83,7 @@ class SeriesIndexTable extends Component {
         className={styles.tableContainer}
         items={items}
         scrollTop={scrollTop}
+        scrollIndex={this.state.scrollIndex}
         contentBody={contentBody}
         isSmallScreen={isSmallScreen}
         rowHeight={38}
@@ -110,6 +117,7 @@ SeriesIndexTable.propTypes = {
   sortKey: PropTypes.string,
   sortDirection: PropTypes.oneOf(sortDirections.all),
   scrollTop: PropTypes.number.isRequired,
+  jumpToCharacter: PropTypes.string,
   contentBody: PropTypes.object.isRequired,
   isSmallScreen: PropTypes.bool.isRequired,
   onSortPress: PropTypes.func.isRequired,

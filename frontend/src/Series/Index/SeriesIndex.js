@@ -43,11 +43,10 @@ class SeriesIndex extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this._viewComponent = null;
-
     this.state = {
       contentBody: null,
       jumpBarItems: [],
+      jumpToCharacter: null,
       isPosterOptionsModalOpen: false,
       isOverviewOptionsModalOpen: false,
       isRendered: false
@@ -79,10 +78,6 @@ class SeriesIndex extends Component {
 
   setContentBodyRef = (ref) => {
     this.setState({ contentBody: ref });
-  }
-
-  setViewComponentRef = (ref) => {
-    this._viewComponent = ref;
   }
 
   setJumpBarItems() {
@@ -137,9 +132,8 @@ class SeriesIndex extends Component {
     this.setState({ isOverviewOptionsModalOpen: false });
   }
 
-  onJumpBarItemPress = (item) => {
-    const viewComponent = this._viewComponent.getWrappedInstance();
-    viewComponent.scrollToFirstCharacter(item);
+  onJumpBarItemPress = (jumpToCharacter) => {
+    this.setState({ jumpToCharacter });
   }
 
   onRender = () => {
@@ -191,6 +185,7 @@ class SeriesIndex extends Component {
     const {
       contentBody,
       jumpBarItems,
+      jumpToCharacter,
       isPosterOptionsModalOpen,
       isOverviewOptionsModalOpen,
       isRendered
@@ -297,9 +292,9 @@ class SeriesIndex extends Component {
               isLoaded &&
                 <div className={styles.contentBodyContainer}>
                   <ViewComponent
-                    ref={this.setViewComponentRef}
                     contentBody={contentBody}
                     scrollTop={scrollTop}
+                    jumpToCharacter={jumpToCharacter}
                     onRender={this.onRender}
                     {...otherProps}
                   />

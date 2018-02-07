@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Measure from 'react-measure';
 import { Grid, WindowScroller } from 'react-virtualized';
+import getIndexOfFirstCharacter from 'Utilities/Array/getIndexOfFirstCharacter';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import dimensions from 'Styles/Variables/dimensions';
 import { sortDirections } from 'Helpers/Props';
@@ -80,7 +81,8 @@ class SeriesIndexOverviews extends Component {
       filterValue,
       sortKey,
       sortDirection,
-      overviewOptions
+      overviewOptions,
+      jumpToCharacter
     } = this.props;
 
     const itemsChanged = hasDifferentItems(prevProps.items, items);
@@ -104,6 +106,20 @@ class SeriesIndexOverviews extends Component {
     ) {
       this._grid.recomputeGridSize();
     }
+
+    if (jumpToCharacter != null && jumpToCharacter !== prevProps.jumpToCharacter) {
+      const index = getIndexOfFirstCharacter(items, jumpToCharacter);
+
+      if (index != null) {
+        const {
+          rowHeight
+        } = this.state;
+
+        const scrollTop = rowHeight * index;
+
+        this.props.onScroll({ scrollTop });
+      }
+    }
   }
 
   //
@@ -115,15 +131,7 @@ class SeriesIndexOverviews extends Component {
       rowHeight
     } = this.state;
 
-    const index = _.findIndex(items, (item) => {
-      const firstCharacter = item.sortTitle.charAt(0);
-
-      if (character === '#') {
-        return !isNaN(firstCharacter);
-      }
-
-      return firstCharacter === character;
-    });
+    const index = getIndexOfFirstCharacter(items, character);
 
     if (index != null) {
       const scrollTop = rowHeight * index;
@@ -268,6 +276,7 @@ SeriesIndexOverviews.propTypes = {
   sortDirection: PropTypes.oneOf(sortDirections.all),
   overviewOptions: PropTypes.object.isRequired,
   scrollTop: PropTypes.number.isRequired,
+  jumpToCharacter: PropTypes.string,
   contentBody: PropTypes.object.isRequired,
   showRelativeDates: PropTypes.bool.isRequired,
   shortDateFormat: PropTypes.string.isRequired,

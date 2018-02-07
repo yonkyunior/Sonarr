@@ -29,6 +29,6 @@ export default connectSection(
   createMapStateToProps,
   createMapDispatchToProps,
   undefined,
-  { withRef: true },
+  undefined,
   { section: 'series', uiSection: 'seriesIndex' }
 )(SeriesIndexTable);

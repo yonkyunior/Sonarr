@@ -1,9 +1,9 @@
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Measure from 'react-measure';
 import { Grid, WindowScroller } from 'react-virtualized';
+import getIndexOfFirstCharacter from 'Utilities/Array/getIndexOfFirstCharacter';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import dimensions from 'Styles/Variables/dimensions';
 import { sortDirections } from 'Helpers/Props';
@@ -121,7 +121,8 @@ class SeriesIndexPosters extends Component {
       filterValue,
       sortKey,
       sortDirection,
-      posterOptions
+      posterOptions,
+      jumpToCharacter
     } = this.props;
 
     const itemsChanged = hasDifferentItems(prevProps.items, items);
@@ -143,35 +144,26 @@ class SeriesIndexPosters extends Component {
     ) {
       this._grid.recomputeGridSize();
     }
+
+    if (jumpToCharacter != null && jumpToCharacter !== prevProps.jumpToCharacter) {
+      const index = getIndexOfFirstCharacter(items, jumpToCharacter);
+
+      if (index != null) {
+        const {
+          columnCount,
+          rowHeight
+        } = this.state;
+
+        const row = Math.floor(index / columnCount);
+        const scrollTop = rowHeight * row;
+
+        this.props.onScroll({ scrollTop });
+      }
+    }
   }
 
   //
   // Control
-
-  scrollToFirstCharacter(character) {
-    const items = this.props.items;
-    const {
-      columnCount,
-      rowHeight
-    } = this.state;
-
-    const index = _.findIndex(items, (item) => {
-      const firstCharacter = item.sortTitle.charAt(0);
-
-      if (character === '#') {
-        return !isNaN(firstCharacter);
-      }
-
-      return firstCharacter === character;
-    });
-
-    if (index != null) {
-      const row = Math.floor(index / columnCount);
-      const scrollTop = rowHeight * row;
-
-      this.props.onScroll({ scrollTop });
-    }
-  }
 
   setGridRef = (ref) => {
     this._grid = ref;
@@ -325,6 +317,7 @@ SeriesIndexPosters.propTypes = {
   sortDirection: PropTypes.oneOf(sortDirections.all),
   posterOptions: PropTypes.object.isRequired,
   scrollTop: PropTypes.number.isRequired,
+  jumpToCharacter: PropTypes.string,
   contentBody: PropTypes.object.isRequired,
   showRelativeDates: PropTypes.bool.isRequired,
   shortDateFormat: PropTypes.string.isRequired,
