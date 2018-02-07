@@ -61,7 +61,8 @@ class SeriesIndex extends Component {
     const {
       items,
       sortKey,
-      sortDirection
+      sortDirection,
+      scrollTop
     } = this.props;
 
     if (
@@ -70,6 +71,10 @@ class SeriesIndex extends Component {
       sortDirection !== prevProps.sortDirection
     ) {
       this.setJumpBarItems();
+    }
+
+    if (this.state.jumpToCharacter != null && scrollTop !== prevProps.scrollTop) {
+      this.setState({ jumpToCharacter: null });
     }
   }
 

@@ -32,6 +32,8 @@ class SeriesIndexTable extends Component {
       if (scrollIndex != null) {
         this.setState({ scrollIndex });
       }
+    } else if (jumpToCharacter == null && prevProps.jumpToCharacter != null) {
+      this.setState({ scrollIndex: null });
     }
   }
 
