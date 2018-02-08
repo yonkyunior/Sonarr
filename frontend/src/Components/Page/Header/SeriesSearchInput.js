@@ -214,10 +214,7 @@ class SeriesSearchInput extends Component {
 
     return (
       <div className={styles.wrapper}>
-        <Icon
-          className={styles.icon}
-          name={icons.SEARCH}
-        />
+        <Icon name={icons.SEARCH} />
 
         <Autosuggest
           ref={this.setAutosuggestRef}
