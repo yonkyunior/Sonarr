@@ -172,19 +172,22 @@ class SeriesIndexPoster extends Component {
               </div>
           }
 
-          <div className={styles.nextAiring}>
-            {
-              getRelativeDate(
-                nextAiring,
-                shortDateFormat,
-                showRelativeDates,
+          {
+            nextAiring &&
+              <div className={styles.nextAiring}>
                 {
-                  timeFormat,
-                  timeForToday: true
+                  getRelativeDate(
+                    nextAiring,
+                    shortDateFormat,
+                    showRelativeDates,
+                    {
+                      timeFormat,
+                      timeForToday: true
+                    }
+                  )
                 }
-              )
-            }
-          </div>
+              </div>
+          }
 
           <SeriesIndexPosterInfo
             qualityProfile={qualityProfile}
