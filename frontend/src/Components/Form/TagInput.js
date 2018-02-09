@@ -95,6 +95,7 @@ class TagInput extends Component {
         minQueryLength={1}
         placeholder={placeholder}
         delimiters={[9, 13, 32, 188]}
+        autofocus={false}
         handleAddition={onTagAdd}
         handleDelete={onTagDelete}
       />
