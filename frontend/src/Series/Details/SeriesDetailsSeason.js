@@ -28,6 +28,7 @@ function getSeasonStatistics(episodes) {
   let episodeCount = 0;
   let episodeFileCount = 0;
   let totalEpisodeCount = 0;
+  let hasMonitoredEpisodes = false;
 
   episodes.forEach((episode) => {
     if (episode.episodeFileId || (episode.monitored && isBefore(episode.airDateUtc))) {
@@ -38,13 +39,18 @@ function getSeasonStatistics(episodes) {
       episodeFileCount++;
     }
 
+    if (episode.monitored) {
+      hasMonitoredEpisodes = true;
+    }
+
     totalEpisodeCount++;
   });
 
   return {
     episodeCount,
     episodeFileCount,
-    totalEpisodeCount
+    totalEpisodeCount,
+    hasMonitoredEpisodes
   };
 }
 
@@ -181,7 +187,8 @@ class SeriesDetailsSeason extends Component {
     const {
       episodeCount,
       episodeFileCount,
-      totalEpisodeCount
+      totalEpisodeCount,
+      hasMonitoredEpisodes
     } = getSeasonStatistics(items);
 
     const {
@@ -257,7 +264,7 @@ class SeriesDetailsSeason extends Component {
 
                 <MenuContent className={styles.actionsMenuContent}>
                   <MenuItem
-                    isDisabled={isSearching}
+                    isDisabled={isSearching || !hasMonitoredEpisodes}
                     onPress={onSearchPress}
                   >
                     <SpinnerIcon
@@ -302,9 +309,10 @@ class SeriesDetailsSeason extends Component {
                 <SpinnerIconButton
                   className={styles.actionButton}
                   name={icons.SEARCH}
-                  title="Search for monitored episodes in this seasons"
+                  title={hasMonitoredEpisodes ? 'Search for monitored episodes in this season' : 'No monitored episodes in this season'}
                   size={24}
                   isSpinning={isSearching}
+                  isDisabled={isSearching || !hasMonitoredEpisodes}
                   onPress={onSearchPress}
                 />
 

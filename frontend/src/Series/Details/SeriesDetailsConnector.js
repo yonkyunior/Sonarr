@@ -54,6 +54,8 @@ function createMapStateToProps() {
         return acc;
       }, []);
 
+      const hasMonitoredEpisodes = episodes.items.some((e) => e.monitored);
+
       return {
         ...series,
         alternateTitles,
@@ -67,6 +69,7 @@ function createMapStateToProps() {
         isPopulated,
         episodesError,
         episodeFilesError,
+        hasMonitoredEpisodes,
         previousSeries,
         nextSeries
       };

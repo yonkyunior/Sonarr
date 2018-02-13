@@ -188,6 +188,7 @@ class SeriesDetails extends Component {
       isPopulated,
       episodesError,
       episodeFilesError,
+      hasMonitoredEpisodes,
       previousSeries,
       nextSeries,
       onMonitorTogglePress,
@@ -247,7 +248,9 @@ class SeriesDetails extends Component {
             <PageToolbarButton
               label="Search Monitored"
               iconName={icons.SEARCH}
+              isDisabled={!monitored || !hasMonitoredEpisodes}
               isSpinning={isSearching}
+              title={hasMonitoredEpisodes ? undefined : 'No monitored episodes in this series'}
               onPress={onSearchPress}
             />
 
@@ -666,6 +669,7 @@ SeriesDetails.propTypes = {
   isPopulated: PropTypes.bool.isRequired,
   episodesError: PropTypes.object,
   episodeFilesError: PropTypes.object,
+  hasMonitoredEpisodes: PropTypes.bool.isRequired,
   previousSeries: PropTypes.object.isRequired,
   nextSeries: PropTypes.object.isRequired,
   onMonitorTogglePress: PropTypes.func.isRequired,
