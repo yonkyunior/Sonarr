@@ -1,11 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { icons, sortDirections } from 'Helpers/Props';
+import { align, icons, sortDirections } from 'Helpers/Props';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import Icon from 'Components/Icon';
+import FilterMenu from 'Components/Menu/FilterMenu';
+import PageMenuButton from 'Components/Menu/PageMenuButton';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
+import InteractiveSearchFilterModalConnector from './InteractiveSearchFilterModalConnector';
 import InteractiveEpisodeSearchRow from './InteractiveEpisodeSearchRow';
+import styles from './InteractiveEpisodeSearch.css';
 
 const columns = [
   {
@@ -71,46 +75,94 @@ function InteractiveEpisodeSearch(props) {
     isFetching,
     isPopulated,
     error,
+    totalReleasesCount,
     items,
+    selectedFilterKey,
+    filters,
+    customFilters,
     sortKey,
     sortDirection,
     longDateFormat,
     timeFormat,
     onSortPress,
+    onFilterSelect,
     onGrabPress
   } = props;
 
   if (isFetching) {
     return <LoadingIndicator />;
-  } else if (!isFetching && !!error) {
-    return <div>Unable to load results for this episode search. Try again later.</div>;
-  } else if (isPopulated && !items.length) {
-    return <div>No results found.</div>;
+  }
+
+  if (!isFetching && !!error) {
+    return (
+      <div>
+          Unable to load results for this episode search. Try again later.
+      </div>
+    );
+  }
+
+  if (isPopulated && !totalReleasesCount) {
+    return (
+      <div>
+        No results found.
+      </div>
+    );
   }
 
   return (
-    <Table
-      columns={columns}
-      sortKey={sortKey}
-      sortDirection={sortDirection}
-      onSortPress={onSortPress}
-    >
-      <TableBody>
-        {
-          items.map((item) => {
-            return (
-              <InteractiveEpisodeSearchRow
-                key={item.guid}
-                {...item}
-                longDateFormat={longDateFormat}
-                timeFormat={timeFormat}
-                onGrabPress={onGrabPress}
-              />
-            );
-          })
-        }
-      </TableBody>
-    </Table>
+    <div>
+      <div className={styles.filterMenuContainer}>
+        <FilterMenu
+          alignMenu={align.RIGHT}
+          selectedFilterKey={selectedFilterKey}
+          filters={filters}
+          customFilters={customFilters}
+          onFilterSelect={onFilterSelect}
+          buttonComponent={PageMenuButton}
+          filterModalConnectorComponent={InteractiveSearchFilterModalConnector}
+        />
+      </div>
+
+      {
+        !!totalReleasesCount && !items.length &&
+        <div>
+              All results are hidden by {filters.length > 1 ? 'filters' : 'a filter'}.
+        </div>
+      }
+
+      {
+        !!items.length &&
+        <Table
+          columns={columns}
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onSortPress={onSortPress}
+        >
+          <TableBody>
+            {
+              items.map((item) => {
+                return (
+                  <InteractiveEpisodeSearchRow
+                    key={item.guid}
+                    {...item}
+                    longDateFormat={longDateFormat}
+                    timeFormat={timeFormat}
+                    onGrabPress={onGrabPress}
+                  />
+                );
+              })
+            }
+          </TableBody>
+        </Table>
+      }
+
+      {
+        totalReleasesCount !== items.length && !!items.length &&
+          <div>
+                Some results are hidden by {filters.length > 1 ? 'filters' : 'a filter'}.
+          </div>
+      }
+    </div>
   );
 }
 
@@ -118,12 +170,17 @@ InteractiveEpisodeSearch.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
   error: PropTypes.object,
+  totalReleasesCount: PropTypes.number.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedFilterKey: PropTypes.string.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  customFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   sortKey: PropTypes.string,
   sortDirection: PropTypes.string,
   longDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
   onSortPress: PropTypes.func.isRequired,
+  onFilterSelect: PropTypes.func.isRequired,
   onGrabPress: PropTypes.func.isRequired
 };
 

@@ -77,8 +77,7 @@ class SeriesIndexOverviews extends Component {
   componentDidUpdate(prevProps) {
     const {
       items,
-      filterKey,
-      filterValue,
+      filters,
       sortKey,
       sortDirection,
       overviewOptions,
@@ -97,8 +96,7 @@ class SeriesIndexOverviews extends Component {
     }
 
     if (
-      prevProps.filterKey !== filterKey ||
-      prevProps.filterValue !== filterValue ||
+      prevProps.filters !== filters ||
       prevProps.sortKey !== sortKey ||
       prevProps.sortDirection !== sortDirection ||
       itemsChanged ||
@@ -270,8 +268,7 @@ class SeriesIndexOverviews extends Component {
 
 SeriesIndexOverviews.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  filterKey: PropTypes.string,
-  filterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.number, PropTypes.string]),
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   sortKey: PropTypes.string,
   sortDirection: PropTypes.oneOf(sortDirections.all),
   overviewOptions: PropTypes.object.isRequired,

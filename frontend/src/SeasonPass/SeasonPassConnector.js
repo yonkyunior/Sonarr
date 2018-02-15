@@ -32,8 +32,8 @@ class SeasonPassConnector extends Component {
     this.props.setSeasonPassSort({ sortKey });
   }
 
-  onFilterSelect = (filterKey, filterValue, filterType) => {
-    this.props.setSeasonPassFilter({ filterKey, filterValue, filterType });
+  onFilterSelect = (selectedFilterKey) => {
+    this.props.setSeasonPassFilter({ selectedFilterKey });
   }
 
   onUpdateSelectedPress = (payload) => {

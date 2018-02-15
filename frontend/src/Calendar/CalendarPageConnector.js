@@ -12,7 +12,7 @@ function createMapStateToProps() {
     createUISettingsSelector(),
     (calendar, seriesCount, uiSettings) => {
       return {
-        unmonitored: calendar.unmonitored,
+        filters: [{ key: 'unmonitored', value: calendar.unmonitored }],
         showUpcoming: calendar.showUpcoming,
         colorImpairedMode: uiSettings.enableColorImpairedMode,
         hasSeries: !!seriesCount

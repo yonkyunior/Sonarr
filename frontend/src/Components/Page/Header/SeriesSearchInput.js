@@ -151,7 +151,7 @@ class SeriesSearchInput extends Component {
     this.reset();
   }
 
-  onSuggestionSelected = (event, { suggestion, sectionIndex }) => {
+  onSuggestionSelected = (event, { suggestion }) => {
     if (suggestion.type === ADD_NEW_TYPE) {
       this.props.onGoToAddNewSeries(this.state.value);
     } else {
@@ -177,7 +177,7 @@ class SeriesSearchInput extends Component {
       });
     }
 
-    if (suggestions.length <= 3) {
+    if (value.length >= 3) {
       suggestionGroups.push({
         title: 'Add New Series',
         suggestions: [

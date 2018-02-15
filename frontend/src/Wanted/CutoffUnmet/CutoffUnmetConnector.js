@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
+import getFilterValue from 'Utilities/Filter/getFilterValue';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import selectUniqueIds from 'Utilities/Object/selectUniqueIds';
 import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
@@ -104,8 +105,8 @@ class CutoffUnmetConnector extends Component {
     this.props.setCutoffUnmetSort({ sortKey });
   }
 
-  onFilterSelect = (filterKey, filterValue) => {
-    this.props.setCutoffUnmetFilter({ filterKey, filterValue });
+  onFilterSelect = (selectedFilterKey) => {
+    this.props.setCutoffUnmetFilter({ selectedFilterKey });
   }
 
   onTableOptionChange = (payload) => {
@@ -125,13 +126,14 @@ class CutoffUnmetConnector extends Component {
 
   onToggleSelectedPress = (selected) => {
     const {
-      filterKey,
-      filterValue
+      filters
     } = this.props;
+
+    const monitored = getFilterValue(filters, 'monitored');
 
     this.props.batchToggleCutoffUnmetEpisodes({
       episodeIds: selected,
-      monitored: filterKey !== 'monitored' || !filterValue
+      monitored: monitored == null || !monitored
     });
   }
 
@@ -166,8 +168,7 @@ class CutoffUnmetConnector extends Component {
 
 CutoffUnmetConnector.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  filterKey: PropTypes.string.isRequired,
-  filterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.number, PropTypes.string]),
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchCutoffUnmet: PropTypes.func.isRequired,
   gotoCutoffUnmetFirstPage: PropTypes.func.isRequired,
   gotoCutoffUnmetPreviousPage: PropTypes.func.isRequired,

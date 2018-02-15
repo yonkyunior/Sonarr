@@ -2,40 +2,40 @@ import $ from 'jquery';
 import updateEpisodes from 'Utilities/Episode/updateEpisodes';
 import getSectionState from 'Utilities/State/getSectionState';
 
-function createBatchToggleEpisodeMonitoredHandler(section) {
-  return function(payload) {
-    return function(dispatch, getState) {
-      const {
-        episodeIds,
+function createBatchToggleEpisodeMonitoredHandler(section, fetchHandler) {
+  return function(getState, payload, dispatch) {
+    const {
+      episodeIds,
+      monitored
+    } = payload;
+
+    const state = getSectionState(getState(), section, true);
+
+    dispatch(updateEpisodes(section, state.items, episodeIds, {
+      isSaving: true
+    }));
+
+    const promise = $.ajax({
+      url: '/episode/monitor',
+      method: 'PUT',
+      data: JSON.stringify({ episodeIds, monitored }),
+      dataType: 'json'
+    });
+
+    promise.done(() => {
+      dispatch(updateEpisodes(section, state.items, episodeIds, {
+        isSaving: false,
         monitored
-      } = payload;
+      }));
 
-      const state = getSectionState(getState(), section, true);
+      dispatch(fetchHandler());
+    });
 
-      updateEpisodes(dispatch, section, state.items, episodeIds, {
-        isSaving: true
-      });
-
-      const promise = $.ajax({
-        url: '/episode/monitor',
-        method: 'PUT',
-        data: JSON.stringify({ episodeIds, monitored }),
-        dataType: 'json'
-      });
-
-      promise.done(() => {
-        updateEpisodes(dispatch, section, state.items, episodeIds, {
-          isSaving: false,
-          monitored
-        });
-      });
-
-      promise.fail(() => {
-        updateEpisodes(dispatch, section, state.items, episodeIds, {
-          isSaving: false
-        });
-      });
-    };
+    promise.fail(() => {
+      dispatch(updateEpisodes(section, state.items, episodeIds, {
+        isSaving: false
+      }));
+    });
   };
 }
 

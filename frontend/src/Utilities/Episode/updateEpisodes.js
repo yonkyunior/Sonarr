@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { update } from 'Store/Actions/baseActions';
 
-function updateEpisodes(dispatch, section, episodes, episodeIds, options) {
+function updateEpisodes(section, episodes, episodeIds, options) {
   const data = _.reduce(episodes, (result, item) => {
     if (episodeIds.indexOf(item.id) > -1) {
       result.push({
@@ -15,7 +15,7 @@ function updateEpisodes(dispatch, section, episodes, episodeIds, options) {
     return result;
   }, []);
 
-  dispatch(update({ section, data }));
+  return update({ section, data });
 }
 
 export default updateEpisodes;

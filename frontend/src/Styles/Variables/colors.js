@@ -100,6 +100,7 @@ module.exports = {
   // Menu
   menuItemColor: '#e1e2e3',
   menuItemHoverColor: '#fbfcfc',
+  menuItemHoverBackgroundColor: '#f5f7fa',
 
   //
   // Toolbar

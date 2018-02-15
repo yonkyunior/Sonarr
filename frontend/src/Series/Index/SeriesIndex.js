@@ -171,8 +171,9 @@ class SeriesIndex extends Component {
       isPopulated,
       error,
       items,
-      filterKey,
-      filterValue,
+      selectedFilterKey,
+      filters,
+      customFilters,
       sortKey,
       sortDirection,
       view,
@@ -267,8 +268,9 @@ class SeriesIndex extends Component {
             />
 
             <SeriesIndexFilterMenu
-              filterKey={filterKey}
-              filterValue={filterValue}
+              selectedFilterKey={selectedFilterKey}
+              filters={filters}
+              customFilters={customFilters}
               isDisabled={hasNoSeries}
               onFilterSelect={onFilterSelect}
             />
@@ -344,8 +346,9 @@ SeriesIndex.propTypes = {
   isPopulated: PropTypes.bool.isRequired,
   error: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  filterKey: PropTypes.string,
-  filterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.number, PropTypes.string]),
+  selectedFilterKey: PropTypes.string.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  customFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   sortKey: PropTypes.string,
   sortDirection: PropTypes.oneOf(sortDirections.all),
   view: PropTypes.string.isRequired,

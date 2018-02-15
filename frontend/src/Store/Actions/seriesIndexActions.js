@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { createAction } from 'redux-actions';
-import { filterTypes, sortDirections } from 'Helpers/Props';
+import { sortDirections } from 'Helpers/Props';
 import createSetTableOptionReducer from './Creators/Reducers/createSetTableOptionReducer';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
 import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
@@ -19,9 +19,6 @@ export const defaultState = {
   sortDirection: sortDirections.ASCENDING,
   secondarySortKey: 'sortTitle',
   secondarySortDirection: sortDirections.ASCENDING,
-  filterKey: null,
-  filterValue: null,
-  filterType: filterTypes.EQUAL,
   view: 'posters',
 
   posterOptions: {
@@ -176,7 +173,7 @@ export const defaultState = {
       const {
         episodeCount = 0,
         episodeFileCount
-      } = item;
+      } = item.statistics;
 
       const progress = episodeCount ? episodeFileCount / episodeCount * 100 : 100;
 
@@ -184,19 +181,17 @@ export const defaultState = {
     }
   },
 
-  filterPredicates: {
-    missing: function(item) {
-      return item.episodeCount - item.episodeFileCount > 0;
-    }
-  }
+  selectedFilterKey: 'all',
+  // filters come from seriesActions
+  customFilters: []
+  // filterPredicates come from seriesActions
 };
 
 export const persistState = [
   'seriesIndex.sortKey',
   'seriesIndex.sortDirection',
-  'seriesIndex.filterKey',
-  'seriesIndex.filterValue',
-  'seriesIndex.filterType',
+  'seriesIndex.selectedFilterKey',
+  'seriesIndex.customFilters',
   'seriesIndex.view',
   'seriesIndex.columns',
   'seriesIndex.posterOptions',

@@ -93,8 +93,8 @@ class SeriesIndexConnector extends Component {
     this.props.setSeriesSort({ sortKey });
   }
 
-  onFilterSelect = (filterKey, filterValue, filterType) => {
-    this.props.setSeriesFilter({ filterKey, filterValue, filterType });
+  onFilterSelect = (selectedFilterKey) => {
+    this.props.setSeriesFilter({ selectedFilterKey });
   }
 
   onViewSelect = (view) => {

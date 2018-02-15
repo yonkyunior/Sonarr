@@ -46,10 +46,9 @@ export const actionHandlers = handleThunks({
     const queryParams = {
       pageSize: 1000,
       page: 1,
-      filterKey: 'episodeId',
-      filterValue: payload.episodeId,
       sortKey: 'date',
-      sortDirection: sortDirections.DESCENDING
+      sortDirection: sortDirections.DESCENDING,
+      episodeId: payload.episodeId
     };
 
     const promise = $.ajax({

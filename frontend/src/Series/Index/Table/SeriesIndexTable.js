@@ -68,8 +68,7 @@ class SeriesIndexTable extends Component {
     const {
       items,
       columns,
-      filterKey,
-      filterValue,
+      filters,
       sortKey,
       sortDirection,
       isSmallScreen,
@@ -100,8 +99,7 @@ class SeriesIndexTable extends Component {
           />
         }
         columns={columns}
-        filterKey={filterKey}
-        filterValue={filterValue}
+        filters={filters}
         sortKey={sortKey}
         sortDirection={sortDirection}
         onRender={onRender}
@@ -114,8 +112,7 @@ class SeriesIndexTable extends Component {
 SeriesIndexTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  filterKey: PropTypes.string,
-  filterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.number, PropTypes.string]),
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   sortKey: PropTypes.string,
   sortDirection: PropTypes.oneOf(sortDirections.all),
   scrollTop: PropTypes.number.isRequired,

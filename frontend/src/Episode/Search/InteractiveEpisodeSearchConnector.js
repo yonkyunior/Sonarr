@@ -2,17 +2,19 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { createSelector } from 'reselect';
 import connectSection from 'Store/connectSection';
-import { fetchReleases, setReleasesSort, grabRelease } from 'Store/Actions/releaseActions';
+import * as releaseActions from 'Store/Actions/releaseActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import InteractiveEpisodeSearch from './InteractiveEpisodeSearch';
 
 function createMapStateToProps() {
   return createSelector(
+    (state) => state.releases.items.length,
     createClientSideCollectionSelector(),
     createUISettingsSelector(),
-    (releases, uiSettings) => {
+    (totalReleasesCount, releases, uiSettings) => {
       return {
+        totalReleasesCount,
         longDateFormat: uiSettings.longDateFormat,
         timeFormat: uiSettings.timeFormat,
         ...releases
@@ -21,11 +23,25 @@ function createMapStateToProps() {
   );
 }
 
-const mapDispatchToProps = {
-  fetchReleases,
-  setReleasesSort,
-  grabRelease
-};
+function createMapDispatchToProps(dispatch, props) {
+  return {
+    dispatchFetchReleases() {
+      dispatch(releaseActions.fetchReleases({ episodeId: props.episodeId }));
+    },
+
+    onSortPress(sortKey, sortDirection) {
+      dispatch(releaseActions.setReleasesSort({ sortKey, sortDirection }));
+    },
+
+    onFilterSelect(selectedFilterKey) {
+      dispatch(releaseActions.setReleasesFilter({ selectedFilterKey }));
+    },
+
+    onGrabPress(guid, indexerId) {
+      dispatch(releaseActions.grabRelease({ guid, indexerId }));
+    }
+  };
+}
 
 class InteractiveEpisodeSearchConnector extends Component {
 
@@ -42,32 +58,25 @@ class InteractiveEpisodeSearchConnector extends Component {
     // otherwise re-show the existing props.
 
     if (!isPopulated) {
-      this.props.fetchReleases({
+      this.props.dispatchFetchReleases({
         episodeId
       });
     }
   }
 
   //
-  // Listeners
-
-  onSortPress = (sortKey, sortDirection) => {
-    this.props.setReleasesSort({ sortKey, sortDirection });
-  }
-
-  onGrabPress = (guid, indexerId) => {
-    this.props.grabRelease({ guid, indexerId });
-  }
-
-  //
   // Render
 
   render() {
+    const {
+      dispatchFetchReleases,
+      ...otherProps
+    } = this.props;
+
     return (
+
       <InteractiveEpisodeSearch
-        {...this.props}
-        onSortPress={this.onSortPress}
-        onGrabPress={this.onGrabPress}
+        {...otherProps}
       />
     );
   }
@@ -76,14 +85,12 @@ class InteractiveEpisodeSearchConnector extends Component {
 InteractiveEpisodeSearchConnector.propTypes = {
   episodeId: PropTypes.number.isRequired,
   isPopulated: PropTypes.bool.isRequired,
-  fetchReleases: PropTypes.func.isRequired,
-  setReleasesSort: PropTypes.func.isRequired,
-  grabRelease: PropTypes.func.isRequired
+  dispatchFetchReleases: PropTypes.func.isRequired
 };
 
 export default connectSection(
   createMapStateToProps,
-  mapDispatchToProps,
+  createMapDispatchToProps,
   undefined,
   undefined,
   { section: 'releases' }

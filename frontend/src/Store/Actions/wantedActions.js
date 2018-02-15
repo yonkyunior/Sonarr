@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 import serverSideCollectionHandlers from 'Utilities/serverSideCollectionHandlers';
-import { sortDirections } from 'Helpers/Props';
+import { filterTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createClearReducer from './Creators/Reducers/createClearReducer';
 import createSetTableOptionReducer from './Creators/Reducers/createSetTableOptionReducer';
@@ -23,8 +23,6 @@ export const defaultState = {
     pageSize: 20,
     sortKey: 'airDateUtc',
     sortDirection: sortDirections.DESCENDING,
-    filterKey: 'monitored',
-    filterValue: 'true',
     error: null,
     items: [],
 
@@ -62,6 +60,33 @@ export const defaultState = {
         isVisible: true,
         isModifiable: false
       }
+    ],
+
+    selectedFilterKey: 'monitored',
+
+    filters: [
+      {
+        key: 'monitored',
+        label: 'Monitored',
+        filters: [
+          {
+            key: 'monitored',
+            value: true,
+            type: filterTypes.EQUAL
+          }
+        ]
+      },
+      {
+        key: 'unmonitored',
+        label: 'Unmonitored',
+        filters: [
+          {
+            key: 'monitored',
+            value: false,
+            type: filterTypes.EQUAL
+          }
+        ]
+      }
     ]
   },
 
@@ -71,9 +96,6 @@ export const defaultState = {
     pageSize: 20,
     sortKey: 'airDateUtc',
     sortDirection: sortDirections.DESCENDING,
-    filterKey: 'monitored',
-    filterValue: true,
-    error: null,
     items: [],
 
     columns: [
@@ -115,6 +137,33 @@ export const defaultState = {
         isVisible: true,
         isModifiable: false
       }
+    ],
+
+    selectedFilterKey: 'monitored',
+
+    filters: [
+      {
+        key: 'monitored',
+        label: 'Monitored',
+        filters: [
+          {
+            key: 'monitored',
+            value: true,
+            type: filterTypes.EQUAL
+          }
+        ]
+      },
+      {
+        key: 'unmonitored',
+        label: 'Unmonitored',
+        filters: [
+          {
+            key: 'monitored',
+            value: false,
+            type: filterTypes.EQUAL
+          }
+        ]
+      }
     ]
   }
 };
@@ -123,14 +172,12 @@ export const persistState = [
   'wanted.missing.pageSize',
   'wanted.missing.sortKey',
   'wanted.missing.sortDirection',
-  'wanted.missing.filterKey',
-  'wanted.missing.filterValue',
+  'wanted.missing.selectedFilterKey',
   'wanted.missing.columns',
   'wanted.cutoffUnmet.pageSize',
   'wanted.cutoffUnmet.sortKey',
   'wanted.cutoffUnmet.sortDirection',
-  'wanted.cutoffUnmet.filterKey',
-  'wanted.cutoffUnmet.filterValue',
+  'wanted.cutoffUnmet.selectedFilterKey',
   'wanted.cutoffUnmet.columns'
 ];
 
@@ -213,7 +260,7 @@ export const actionHandlers = handleThunks({
     }
   ),
 
-  [BATCH_TOGGLE_MISSING_EPISODES]: createBatchToggleEpisodeMonitoredHandler('wanted.missing'),
+  [BATCH_TOGGLE_MISSING_EPISODES]: createBatchToggleEpisodeMonitoredHandler('wanted.missing', fetchMissing),
 
   ...createServerSideCollectionHandlers(
     'wanted.cutoffUnmet',
@@ -231,7 +278,7 @@ export const actionHandlers = handleThunks({
     }
   ),
 
-  [BATCH_TOGGLE_CUTOFF_UNMET_EPISODES]: createBatchToggleEpisodeMonitoredHandler('wanted.cutoffUnmet')
+  [BATCH_TOGGLE_CUTOFF_UNMET_EPISODES]: createBatchToggleEpisodeMonitoredHandler('wanted.cutoffUnmet', fetchCutoffUnmet)
 
 });
 

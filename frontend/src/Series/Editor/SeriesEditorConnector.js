@@ -49,8 +49,8 @@ class SeriesEditorConnector extends Component {
     this.props.dispatchSetSeriesEditorSort({ sortKey });
   }
 
-  onFilterSelect = (filterKey, filterValue, filterType) => {
-    this.props.dispatchSetSeriesEditorFilter({ filterKey, filterValue, filterType });
+  onFilterSelect = (selectedFilterKey) => {
+    this.props.dispatchSetSeriesEditorFilter({ selectedFilterKey });
   }
 
   onSaveSelected = (payload) => {

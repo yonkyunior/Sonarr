@@ -42,8 +42,8 @@ class CalendarPage extends Component {
     this.props.onDaysCountChange(days);
   }
 
-  onFilterMenuItemPress = (filterKey, unmonitored) => {
-    this.props.onUnmonitoredChange(unmonitored);
+  onFilterMenuItemPress = (filters) => {
+    this.props.onUnmonitoredChange(filters[0].value);
   }
 
   onGetCalendarLinkPress = () => {
@@ -59,7 +59,7 @@ class CalendarPage extends Component {
 
   render() {
     const {
-      unmonitored,
+      filters,
       hasSeries,
       colorImpairedMode
     } = this.props;
@@ -91,8 +91,7 @@ class CalendarPage extends Component {
                 <FilterMenuItem
                   name="unmonitored"
                   value={true}
-                  filterKey="unmonitored"
-                  filterValue={unmonitored}
+                  filters={filters}
                   onPress={this.onFilterMenuItemPress}
                 >
                   All
@@ -101,8 +100,7 @@ class CalendarPage extends Component {
                 <FilterMenuItem
                   name="unmonitored"
                   value={false}
-                  filterKey="unmonitored"
-                  filterValue={unmonitored}
+                  filters={filters}
                   onPress={this.onFilterMenuItemPress}
                 >
                   Monitored Only
@@ -139,7 +137,7 @@ class CalendarPage extends Component {
 }
 
 CalendarPage.propTypes = {
-  unmonitored: PropTypes.bool.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   hasSeries: PropTypes.bool.isRequired,
   colorImpairedMode: PropTypes.bool.isRequired,
   onDaysCountChange: PropTypes.func.isRequired,
