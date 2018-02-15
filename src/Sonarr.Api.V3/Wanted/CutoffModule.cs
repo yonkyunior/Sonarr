@@ -1,3 +1,4 @@
+using System.Linq;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Tv;
@@ -35,14 +36,15 @@ namespace Sonarr.Api.V3.Wanted
 
             var includeSeries = Request.GetBooleanQueryParameter("includeSeries");
             var includeEpisodeFile = Request.GetBooleanQueryParameter("includeEpisodeFile");
+            var filter = pagingResource.Filters.FirstOrDefault(f => f.Key == "monitored");
 
-            if (pagingResource.FilterKey == "monitored" && pagingResource.FilterValue == "false")
+            if (filter != null && filter.Value == "false")
             {
-                pagingSpec.FilterExpression = v => v.Monitored == false || v.Series.Monitored == false;
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == false || v.Series.Monitored == false);
             }
             else
             {
-                pagingSpec.FilterExpression = v => v.Monitored == true && v.Series.Monitored == true;
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Series.Monitored == true);
             }
 
             var resource = ApplyToPage(_episodeCutoffService.EpisodesWhereCutoffUnmet, pagingSpec, v => MapToResource(v, includeSeries, includeEpisodeFile));

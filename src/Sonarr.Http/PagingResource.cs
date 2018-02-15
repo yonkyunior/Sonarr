@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NzbDrone.Core.Datastore;
 
 namespace Sonarr.Http
@@ -9,8 +9,7 @@ namespace Sonarr.Http
         public int PageSize { get; set; }
         public string SortKey { get; set; }
         public SortDirection SortDirection { get; set; }
-        public string FilterKey { get; set; }
-        public string FilterValue { get; set; }
+        public List<PagingResourceFilter> Filters { get; set; }
         public int TotalRecords { get; set; }
         public List<TResource> Records { get; set; }
     }

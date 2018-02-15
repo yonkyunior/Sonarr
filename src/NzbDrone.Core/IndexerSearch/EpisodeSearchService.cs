@@ -113,17 +113,17 @@ namespace NzbDrone.Core.IndexerSearch
 
             else
             {
-                episodes = _episodeService.EpisodesWithoutFiles(new PagingSpec<Episode>
-                                                                    {
-                                                                        Page = 1,
-                                                                        PageSize = 100000,
-                                                                        SortDirection = SortDirection.Ascending,
-                                                                        SortKey = "Id",
-                                                                        FilterExpression =
-                                                                            v =>
-                                                                            v.Monitored == true &&
-                                                                            v.Series.Monitored == true
-                                                                    }).Records.ToList();
+                var pagingSpec = new PagingSpec<Episode>
+                                 {
+                                     Page = 1,
+                                     PageSize = 100000,
+                                     SortDirection = SortDirection.Ascending,
+                                     SortKey = "Id"
+                                 };
+
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == true &&v.Series.Monitored == true);
+
+                episodes = _episodeService.EpisodesWithoutFiles(pagingSpec).Records.ToList();
             }
 
             var queue = _queueService.GetQueue().Select(q => q.Episode.Id);
@@ -151,14 +151,17 @@ namespace NzbDrone.Core.IndexerSearch
                                    v.Series.Monitored == true;
             }
 
-            var episodes = _episodeCutoffService.EpisodesWhereCutoffUnmet(new PagingSpec<Episode>
-            {
-                Page = 1,
-                PageSize = 100000,
-                SortDirection = SortDirection.Ascending,
-                SortKey = "Id",
-                FilterExpression = filterExpression
-            }).Records.ToList();
+            var pagingSpec = new PagingSpec<Episode>
+                             {
+                                 Page = 1,
+                                 PageSize = 100000,
+                                 SortDirection = SortDirection.Ascending,
+                                 SortKey = "Id"
+                             };
+
+            pagingSpec.FilterExpressions.Add(filterExpression);
+
+            var episodes = _episodeCutoffService.EpisodesWhereCutoffUnmet(pagingSpec).Records.ToList();
 
             var queue = _queueService.GetQueue().Select(q => q.Episode.Id);
             var missing = episodes.Where(e => !queue.Contains(e.Id)).ToList();

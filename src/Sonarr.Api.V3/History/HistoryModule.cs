@@ -63,16 +63,19 @@ namespace Sonarr.Api.V3.History
             var includeSeries = Request.GetBooleanQueryParameter("includeSeries");
             var includeEpisode = Request.GetBooleanQueryParameter("includeEpisode");
 
-            if (pagingResource.FilterKey == "eventType")
+            var eventTypeFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "eventType");
+            var episodeIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "episodeId");
+
+            if (eventTypeFilter != null)
             {
-                var filterValue = (HistoryEventType)Convert.ToInt32(pagingResource.FilterValue);
-                pagingSpec.FilterExpression = v => v.EventType == filterValue;
+                var filterValue = (HistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
+                pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
             }
 
-            if (pagingResource.FilterKey == "episodeId")
+            if (episodeIdFilter != null)
             {
-                int episodeId = Convert.ToInt32(pagingResource.FilterValue);
-                pagingSpec.FilterExpression = h => h.EpisodeId == episodeId;
+                var episodeId = Convert.ToInt32(episodeIdFilter.Value);
+                pagingSpec.FilterExpressions.Add(h => h.EpisodeId == episodeId);
             }
 
             return ApplyToPage(_historyService.Paged, pagingSpec, h => MapToResource(h, includeSeries, includeEpisode));

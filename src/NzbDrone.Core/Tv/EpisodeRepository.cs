@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Marr.Data.QGen;
@@ -212,7 +212,7 @@ namespace NzbDrone.Core.Tv
         private SortBuilder<Episode> GetMissingEpisodesQuery(PagingSpec<Episode> pagingSpec, DateTime currentTime, int startingSeasonNumber)
         {
             return Query.Join<Episode, Series>(JoinType.Inner, e => e.Series, (e, s) => e.SeriesId == s.Id)
-                            .Where(pagingSpec.FilterExpression)
+                            .Where(pagingSpec.FilterExpressions.FirstOrDefault())
                             .AndWhere(e => e.EpisodeFileId == 0)
                             .AndWhere(e => e.SeasonNumber >= startingSeasonNumber)
                             .AndWhere(BuildAirDateUtcCutoffWhereClause(currentTime))
@@ -225,7 +225,7 @@ namespace NzbDrone.Core.Tv
         {
             return Query.Join<Episode, Series>(JoinType.Inner, e => e.Series, (e, s) => e.SeriesId == s.Id)
                              .Join<Episode, EpisodeFile>(JoinType.Left, e => e.EpisodeFile, (e, s) => e.EpisodeFileId == s.Id)
-                             .Where(pagingSpec.FilterExpression)
+                             .Where(pagingSpec.FilterExpressions.FirstOrDefault())
                              .AndWhere(e => e.EpisodeFileId != 0)
                              .AndWhere(e => e.SeasonNumber >= startingSeasonNumber)
                              .AndWhere(
