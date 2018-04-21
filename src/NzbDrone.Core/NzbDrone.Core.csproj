@@ -754,6 +754,7 @@
     <Compile Include="Languages\Language.cs" />
     <Compile Include="Languages\LanguageComparer.cs" />
     <Compile Include="Languages\LanguagesBelowCutoff.cs" />
+    <Compile Include="MediaFiles\EpisodeImport\Aggregation\Aggregators\AggregateLanguage.cs" />
     <Compile Include="Profiles\Languages\LanguageProfile.cs" />
     <Compile Include="Profiles\Languages\LanguageProfileInUseException.cs" />
     <Compile Include="Lifecycle\ApplicationShutdownRequested.cs" />
