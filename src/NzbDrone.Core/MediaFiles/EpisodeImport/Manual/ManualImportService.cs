@@ -171,8 +171,7 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport.Manual
                 return MapItem(new ImportDecision(localEpisode, new Rejection("Unknown Series")), folder, downloadId);
             }
 
-            var importDecisions = _importDecisionMaker.GetImportDecisions(new List<string> {file},
-                series, downloadClientItem, null, SceneSource(series, folder));
+            var importDecisions = _importDecisionMaker.GetImportDecisions(new List<string> {file}, series, downloadClientItem, null, SceneSource(series, folder), true);
 
             return importDecisions.Any() ? MapItem(importDecisions.First(), folder, downloadId) : new ManualImportItem
                                                                                                   {

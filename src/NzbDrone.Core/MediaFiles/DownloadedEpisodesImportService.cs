@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -173,7 +173,7 @@ namespace NzbDrone.Core.MediaFiles
                 }
             }
 
-            var decisions = _importDecisionMaker.GetImportDecisions(videoFiles.ToList(), series, downloadClientItem, folderInfo, true);
+            var decisions = _importDecisionMaker.GetImportDecisions(videoFiles.ToList(), series, downloadClientItem, folderInfo, true, true);
             var importResults = _importApprovedEpisodes.Import(decisions, true, downloadClientItem, importMode);
 
             if (importMode == ImportMode.Auto)
@@ -232,7 +232,7 @@ namespace NzbDrone.Core.MediaFiles
                 }
             }
 
-            var decisions = _importDecisionMaker.GetImportDecisions(new List<string>() { fileInfo.FullName }, series, downloadClientItem, null, true);
+            var decisions = _importDecisionMaker.GetImportDecisions(new List<string>() { fileInfo.FullName }, series, downloadClientItem, null, true, true);
 
             return _importApprovedEpisodes.Import(decisions, true, downloadClientItem, importMode);
         }
