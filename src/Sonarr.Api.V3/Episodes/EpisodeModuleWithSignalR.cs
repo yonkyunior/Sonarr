@@ -130,7 +130,7 @@ namespace Sonarr.Api.V3.Episodes
         {
             foreach (var episode in message.EpisodeFile.Episodes.Value)
             {
-                BroadcastResourceChange(ModelAction.Deleted, episode.Id);
+                BroadcastResourceChange(ModelAction.Updated, episode.Id);
             }
         }
     }
