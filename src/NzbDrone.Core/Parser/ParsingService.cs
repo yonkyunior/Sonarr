@@ -37,7 +37,6 @@ namespace NzbDrone.Core.Parser
             _logger = logger;
         }
 
-                Language = parsedEpisodeInfo.Language,
         public Series GetSeries(string title)
         {
             var parsedEpisodeInfo = Parser.ParseTitle(title);

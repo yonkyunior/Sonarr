@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
@@ -13,6 +13,7 @@ using NzbDrone.Core.Tv;
 using NzbDrone.Test.Common;
 using FizzWare.NBuilder;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.Languages;
 using NzbDrone.Core.MediaFiles.EpisodeImport.Aggregation;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Profiles.Languages;
@@ -182,35 +183,6 @@ namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport
             ExceptionVerification.ExpectedErrors(3);
         }
 
-        [Test]
-        public void should_use_file_language_if_folder_language_is_null()
-        {
-            GivenSpecifications(_pass1, _pass2, _pass3);
-            var expectedLanguage = Parser.Parser.ParseLanguage(_videoFiles.Single());
-
-            var result = Subject.GetImportDecisions(_videoFiles, _series);
-
-            result.Single().LocalEpisode.Language.Should().Be(expectedLanguage);
-        }
-
-        [Test]
-        }
-
-        [Test]
-        public void should_use_folder_language_when_greater_than_file_language()
-        {
-            GivenSpecifications(_pass1, _pass2, _pass3);
-            GivenVideoFiles(new string[] { @"C:\Test\Unsorted\The.Office.S03E115.Spanish.mkv".AsOsAgnostic() });
-
-            _localEpisode.Path = _videoFiles.Single();
-            _localEpisode.Quality.Quality = Quality.HDTV720p;
-            _localEpisode.Language = Language.Spanish;
-
-            var expectedLanguage = Language.French;
-
-            var result = Subject.GetImportDecisions(_videoFiles, _series, null, new ParsedEpisodeInfo { Language = expectedLanguage, Quality = new QualityModel (Quality.SDTV) }, true);
-
-            result.Single().LocalEpisode.Language.Should().Be(expectedLanguage);
         public void should_not_throw_if_episodes_are_not_found()
         {
             GivenSpecifications(_pass1);
