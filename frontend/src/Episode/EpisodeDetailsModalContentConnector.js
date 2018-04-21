@@ -46,7 +46,7 @@ function createMapDispatchToProps(dispatch, props) {
       const {
         episodeId,
         episodeEntity
-      } = this.props;
+      } = props;
 
       dispatch(toggleEpisodeMonitored({
         episodeEntity,

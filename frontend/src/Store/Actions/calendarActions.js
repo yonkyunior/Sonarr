@@ -7,7 +7,6 @@ import { filterTypes } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import * as calendarViews from 'Calendar/calendarViews';
 import createHandleActions from './Creators/createHandleActions';
-import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
 import { set, update } from './baseActions';
 
 //
