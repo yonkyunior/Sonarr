@@ -98,7 +98,7 @@ namespace NzbDrone.Core.IndexerSearch
 
             if (series.SeriesType == SeriesTypes.Daily)
             {
-                return SearchDailySeason(series, episodes, userInvokedSearch);
+                return SearchDailySeason(series, episodes, userInvokedSearch, interactiveSearch);
             }
 
             if (seasonNumber == 0)
@@ -234,7 +234,7 @@ namespace NzbDrone.Core.IndexerSearch
             return downloadDecisions;
         }
 
-        private List<DownloadDecision> SearchDailySeason(Series series, List<Episode> episodes, bool userInvokedSearch)
+        private List<DownloadDecision> SearchDailySeason(Series series, List<Episode> episodes, bool userInvokedSearch, bool interactiveSearch)
         {
             var downloadDecisions = new List<DownloadDecision>();
             foreach (var yearGroup in episodes.Where(v => v.Monitored && v.AirDate.IsNotNullOrWhiteSpace())
@@ -244,14 +244,14 @@ namespace NzbDrone.Core.IndexerSearch
 
                 if (yearEpisodes.Count > 1)
                 {
-                    var searchSpec = Get<DailySeasonSearchCriteria>(series, yearEpisodes, userInvokedSearch);
+                    var searchSpec = Get<DailySeasonSearchCriteria>(series, yearEpisodes, userInvokedSearch, interactiveSearch);
                     searchSpec.Year = yearGroup.Key;
 
                     downloadDecisions.AddRange(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec));
                 }
                 else
                 {
-                    downloadDecisions.AddRange(SearchDaily(series, yearEpisodes.First(), userInvokedSearch));
+                    downloadDecisions.AddRange(SearchDaily(series, yearEpisodes.First(), userInvokedSearch, interactiveSearch));
                 }
             }
 

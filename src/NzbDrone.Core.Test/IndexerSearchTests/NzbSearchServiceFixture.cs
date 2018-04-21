@@ -274,7 +274,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
             var allCriteria = WatchForSearchCriteria();
 
-            Subject.SeasonSearch(_xemSeries.Id, 1, false, true);
+            Subject.SeasonSearch(_xemSeries.Id, 1, false, true, false);
 
             var criteria = allCriteria.OfType<DailySeasonSearchCriteria>().ToList();
 
@@ -293,7 +293,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
             var allCriteria = WatchForSearchCriteria();
 
-            Subject.SeasonSearch(_xemSeries.Id, 1, false, true);
+            Subject.SeasonSearch(_xemSeries.Id, 1, false, true, false);
 
             var criteria1 = allCriteria.OfType<DailySeasonSearchCriteria>().ToList();
             var criteria2 = allCriteria.OfType<DailyEpisodeSearchCriteria>().ToList();
@@ -316,7 +316,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
             var allCriteria = WatchForSearchCriteria();
 
-            Subject.SeasonSearch(_xemSeries.Id, 1, false, true);
+            Subject.SeasonSearch(_xemSeries.Id, 1, false, true, false);
 
             var criteria1 = allCriteria.OfType<DailySeasonSearchCriteria>().ToList();
             var criteria2 = allCriteria.OfType<DailyEpisodeSearchCriteria>().ToList();
