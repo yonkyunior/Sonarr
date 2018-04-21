@@ -173,7 +173,7 @@ namespace NzbDrone.Core.MediaFiles
                 }
             }
 
-            var decisions = _importDecisionMaker.GetImportDecisions(videoFiles.ToList(), series, downloadClientItem, folderInfo, true, true);
+            var decisions = _importDecisionMaker.GetImportDecisions(videoFiles.ToList(), series, downloadClientItem, folderInfo, true);
             var importResults = _importApprovedEpisodes.Import(decisions, true, downloadClientItem, importMode);
 
             if (importMode == ImportMode.Auto)
@@ -232,7 +232,7 @@ namespace NzbDrone.Core.MediaFiles
                 }
             }
 
-            var decisions = _importDecisionMaker.GetImportDecisions(new List<string>() { fileInfo.FullName }, series, downloadClientItem, null, true, true);
+            var decisions = _importDecisionMaker.GetImportDecisions(new List<string>() { fileInfo.FullName }, series, downloadClientItem, null, true);
 
             return _importApprovedEpisodes.Import(decisions, true, downloadClientItem, importMode);
         }
