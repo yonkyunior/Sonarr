@@ -25,6 +25,7 @@ class NamingModal extends Component {
     this._selectionEnd = null;
 
     this.state = {
+      separator: ' ',
       case: 'title'
     };
   }
@@ -32,7 +33,11 @@ class NamingModal extends Component {
   //
   // Listeners
 
-  onNamingCaseChange = (event) => {
+  onTokenSeparatorChange = (event) => {
+    this.setState({ separator: event.value });
+  }
+
+  onTokenCaseChange = (event) => {
     this.setState({ case: event.value });
   }
 
@@ -87,7 +92,19 @@ class NamingModal extends Component {
       onModalClose
     } = this.props;
 
-    const namingOptions = [
+    const {
+      separator: tokenSeparator,
+      case: tokenCase
+    } = this.state;
+
+    const separatorOptions = [
+      { key: ' ', value: 'Space ( )' },
+      { key: '.', value: 'Period (.)' },
+      { key: '_', value: 'Underscore (_)' },
+      { key: '-', value: 'Dash (-)' }
+    ];
+
+    const caseOptions = [
       { key: 'title', value: 'Default Case' },
       { key: 'lower', value: 'Lower Case' },
       { key: 'upper', value: 'Upper Case' }
@@ -110,14 +127,10 @@ class NamingModal extends Component {
 
     const seriesTokens = [
       { token: '{Series Title}', example: 'Series Title (2010)' },
-      { token: '{Series.Title}', example: 'Series.Title.(2010)' },
-      { token: '{Series_Title}', example: 'Series_Title_(2010)' },
 
       { token: '{Series TitleThe}', example: 'Series Title, The (2010)' },
 
-      { token: '{Series CleanTitle}', example: 'Series Title 2010' },
-      { token: '{Series.CleanTitle}', example: 'Series.Title.2010' },
-      { token: '{Series_CleanTitle}', example: 'Series_Title_2010' }
+      { token: '{Series CleanTitle}', example: 'Series Title 2010' }
     ];
 
     const seasonTokens = [
@@ -132,9 +145,7 @@ class NamingModal extends Component {
 
     const airDateTokens = [
       { token: '{Air-Date}', example: '2016-03-20' },
-      { token: '{Air Date}', example: '2016 03 20' },
-      { token: '{Air.Date}', example: '2016.03.20' },
-      { token: '{Air_Date}', example: '2016_03_20' }
+      { token: '{Air Date}', example: '2016 03 20' }
     ];
 
     const absoluteTokens = [
@@ -145,40 +156,24 @@ class NamingModal extends Component {
 
     const episodeTitleTokens = [
       { token: '{Episode Title}', example: 'Episode Title' },
-      { token: '{Episode.Title}', example: 'Episode.Title' },
-      { token: '{Episode_Title}', example: 'Episode_Title' },
-      { token: '{Episode CleanTitle}', example: 'Episode Title' },
-      { token: '{Episode.CleanTitle}', example: 'Episode.Title' },
-      { token: '{Episode_CleanTitle}', example: 'Episode_Title' }
+      { token: '{Episode CleanTitle}', example: 'Episode Title' }
     ];
 
     const qualityTokens = [
       { token: '{Quality Full}', example: 'HDTV 720p Proper' },
-      { token: '{Quality-Full}', example: 'HDTV-720p-Proper' },
-      { token: '{Quality.Full}', example: 'HDTV.720p.Proper' },
-      { token: '{Quality_Full}', example: 'HDTV_720p_Proper' },
-      { token: '{Quality Title}', example: 'HDTV 720p' },
-      { token: '{Quality-Title}', example: 'HDTV-720p' },
-      { token: '{Quality.Title}', example: 'HDTV.720p' },
-      { token: '{Quality_Title}', example: 'HDTV_720p' }
+      { token: '{Quality Title}', example: 'HDTV 720p' }
     ];
 
     const mediaInfoTokens = [
       { token: '{MediaInfo Simple}', example: 'x264 DTS' },
-      { token: '{MediaInfo.Simple}', example: 'x264.DTS' },
-      { token: '{MediaInfo_Simple}', example: 'x264_DTS' },
       { token: '{MediaInfo Full}', example: 'x264 DTS [EN+DE]' },
-      { token: '{MediaInfo.Full}', example: 'x264.DTS.[EN+DE]' },
-      { token: '{MediaInfo_Full}', example: 'x264_DTS_[EN+DE]' },
       { token: '{MediaInfo VideoCodec}', example: 'x264' },
       { token: '{MediaInfo AudioFormat}', example: 'DTS' },
       { token: '{MediaInfo AudioChannels}', example: '5.1' }
     ];
 
     const releaseGroupTokens = [
-      { token: '{Release Group}', example: 'Rls Grp' },
-      { token: '{Release.Group}', example: 'Rls.Grp' },
-      { token: '{Release_Group}', example: 'Rls_Grp' }
+      { token: '{Release Group}', example: 'Rls Grp' }
     ];
 
     const originalTokens = [
@@ -200,10 +195,18 @@ class NamingModal extends Component {
             <div className={styles.namingSelectContainer}>
               <SelectInput
                 className={styles.namingSelect}
-                name="namingSelect"
-                value={this.state.case}
-                values={namingOptions}
-                onChange={this.onNamingCaseChange}
+                name="separator"
+                value={tokenSeparator}
+                values={separatorOptions}
+                onChange={this.onTokenSeparatorChange}
+              />
+
+              <SelectInput
+                className={styles.namingSelect}
+                name="case"
+                value={tokenCase}
+                values={caseOptions}
+                onChange={this.onTokenCaseChange}
               />
             </div>
 
@@ -221,7 +224,8 @@ class NamingModal extends Component {
                             token={token}
                             example={example}
                             isFullFilename={true}
-                            tokenCase={this.state.case}
+                            tokenSeparator={tokenSeparator}
+                            tokenCase={tokenCase}
                             size={sizes.LARGE}
                             onPress={this.onOptionPress}
                           />
@@ -244,7 +248,8 @@ class NamingModal extends Component {
                         value={value}
                         token={token}
                         example={example}
-                        tokenCase={this.state.case}
+                        tokenSeparator={tokenSeparator}
+                        tokenCase={tokenCase}
                         onPress={this.onOptionPress}
                       />
                     );
@@ -267,7 +272,8 @@ class NamingModal extends Component {
                             value={value}
                             token={token}
                             example={example}
-                            tokenCase={this.state.case}
+                            tokenSeparator={tokenSeparator}
+                            tokenCase={tokenCase}
                             onPress={this.onOptionPress}
                           />
                         );
@@ -292,7 +298,8 @@ class NamingModal extends Component {
                               value={value}
                               token={token}
                               example={example}
-                              tokenCase={this.state.case}
+                              tokenSeparator={tokenSeparator}
+                              tokenCase={tokenCase}
                               onPress={this.onOptionPress}
                             />
                           );
@@ -315,7 +322,8 @@ class NamingModal extends Component {
                                   value={value}
                                   token={token}
                                   example={example}
-                                  tokenCase={this.state.case}
+                                  tokenSeparator={tokenSeparator}
+                                  tokenCase={tokenCase}
                                   onPress={this.onOptionPress}
                                 />
                               );
@@ -339,7 +347,8 @@ class NamingModal extends Component {
                                   value={value}
                                   token={token}
                                   example={example}
-                                  tokenCase={this.state.case}
+                                  tokenSeparator={tokenSeparator}
+                                  tokenCase={tokenCase}
                                   onPress={this.onOptionPress}
                                 />
                               );
@@ -366,7 +375,8 @@ class NamingModal extends Component {
                               value={value}
                               token={token}
                               example={example}
-                              tokenCase={this.state.case}
+                              tokenSeparator={tokenSeparator}
+                              tokenCase={tokenCase}
                               onPress={this.onOptionPress}
                             />
                           );
@@ -387,7 +397,8 @@ class NamingModal extends Component {
                               value={value}
                               token={token}
                               example={example}
-                              tokenCase={this.state.case}
+                              tokenSeparator={tokenSeparator}
+                              tokenCase={tokenCase}
                               onPress={this.onOptionPress}
                             />
                           );
@@ -408,7 +419,8 @@ class NamingModal extends Component {
                               value={value}
                               token={token}
                               example={example}
-                              tokenCase={this.state.case}
+                              tokenSeparator={tokenSeparator}
+                              tokenCase={tokenCase}
                               onPress={this.onOptionPress}
                             />
                           );
@@ -429,7 +441,8 @@ class NamingModal extends Component {
                               value={value}
                               token={token}
                               example={example}
-                              tokenCase={this.state.case}
+                              tokenSeparator={tokenSeparator}
+                              tokenCase={tokenCase}
                               onPress={this.onOptionPress}
                             />
                           );
@@ -450,7 +463,8 @@ class NamingModal extends Component {
                               value={value}
                               token={token}
                               example={example}
-                              tokenCase={this.state.case}
+                              tokenSeparator={tokenSeparator}
+                              tokenCase={tokenCase}
                               size={sizes.LARGE}
                               onPress={this.onOptionPress}
                             />
