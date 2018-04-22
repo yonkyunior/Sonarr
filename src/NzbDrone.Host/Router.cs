@@ -1,8 +1,8 @@
-using System;
 using NLog;
 using NzbDrone.Common;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Processes;
+using NzbDrone.Host.AccessControl;
 using IServiceProvider = NzbDrone.Common.IServiceProvider;
 
 namespace NzbDrone.Host
@@ -14,6 +14,7 @@ namespace NzbDrone.Host
         private readonly IConsoleService _consoleService;
         private readonly IRuntimeInfo _runtimeInfo;
         private readonly IProcessProvider _processProvider;
+        private readonly IRemoteAccessAdapter _remoteAccessAdapter;
         private readonly Logger _logger;
 
         public Router(INzbDroneServiceFactory nzbDroneServiceFactory,
@@ -21,6 +22,7 @@ namespace NzbDrone.Host
                       IConsoleService consoleService,
                       IRuntimeInfo runtimeInfo,
                       IProcessProvider processProvider,
+                      IRemoteAccessAdapter remoteAccessAdapter,
                       Logger logger)
         {
             _nzbDroneServiceFactory = nzbDroneServiceFactory;
@@ -28,6 +30,7 @@ namespace NzbDrone.Host
             _consoleService = consoleService;
             _runtimeInfo = runtimeInfo;
             _processProvider = processProvider;
+            _remoteAccessAdapter = remoteAccessAdapter;
             _logger = logger;
         }
 
@@ -63,6 +66,7 @@ namespace NzbDrone.Host
                         }
                         else
                         {
+                            _remoteAccessAdapter.MakeAccessible(true);
                             _serviceProvider.Install(ServiceProvider.SERVICE_NAME);
                             _serviceProvider.SetPermissions(ServiceProvider.SERVICE_NAME);
 
@@ -83,6 +87,13 @@ namespace NzbDrone.Host
                         {
                             _serviceProvider.Uninstall(ServiceProvider.SERVICE_NAME);
                         }
+
+                        break;
+                    }
+                case ApplicationModes.RegisterUrl:
+                    {
+                        _logger.Debug("Regiser URL selected");
+                        _remoteAccessAdapter.MakeAccessible(false);
 
                         break;
                     }
