@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Nancy;
 using Nancy.Authentication.Basic;
@@ -71,7 +71,6 @@ namespace Sonarr.Http.Authentication
                 );
 
             FormsAuthConfig = new FormsAuthenticationConfiguration
-
             {
                 RedirectUrl = _configFileProvider.UrlBase + "/login",
                 UserMapper = _authenticationService,
