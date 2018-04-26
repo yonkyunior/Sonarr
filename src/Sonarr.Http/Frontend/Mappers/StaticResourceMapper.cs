@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -38,7 +38,7 @@ namespace Sonarr.Http.Frontend.Mappers
             }
 
             return resourceUrl.StartsWith("/content") ||
-                   resourceUrl.EndsWith(".js") ||
+                   (resourceUrl.EndsWith(".js") && !resourceUrl.EndsWith("initialize.js")) ||
                    resourceUrl.EndsWith(".map") ||
                    resourceUrl.EndsWith(".css") ||
                    (resourceUrl.EndsWith(".ico") && !resourceUrl.Equals("/favicon.ico")) ||
