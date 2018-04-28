@@ -34,15 +34,20 @@ function createMapStateToProps() {
     (state) => state.app,
     createDimensionsSelector(),
     (series, tags, settings, app, dimensions) => {
-      const isPopulated = series.isPopulated &&
+      const isPopulated = (
+        series.isPopulated &&
         tags.isPopulated &&
         settings.qualityProfiles.isPopulated &&
-        settings.ui.isPopulated;
+        settings.ui.isPopulated
+      );
 
-      const hasError = !!series.error ||
-        !!tags.error ||
-        !!settings.qualityProfiles.error ||
-        !!settings.ui.error;
+      const hasError = !!(
+        series.error ||
+        tags.error ||
+        settings.qualityProfiles.error ||
+        settings.languageProfiles.error ||
+        settings.ui.error
+      );
 
       return {
         isPopulated,

@@ -15,8 +15,16 @@ function createMapStateToProps() {
     (state) => state.rootFolders,
     (state) => state.addSeries,
     (state) => state.importSeries,
+    (state) => state.settings.qualityProfiles,
     (state) => state.settings.languageProfiles,
-    (match, rootFolders, addSeries, importSeriesState, languageProfiles) => {
+    (
+      match,
+      rootFolders,
+      addSeries,
+      importSeriesState,
+      qualityProfiles,
+      languageProfiles
+    ) => {
       const {
         isFetching: rootFoldersFetching,
         isPopulated: rootFoldersPopulated,
@@ -31,7 +39,11 @@ function createMapStateToProps() {
         rootFoldersFetching,
         rootFoldersPopulated,
         rootFoldersError,
-        showLanguageProfile: languageProfiles.items.length > 1
+        qualityProfiles: qualityProfiles.items,
+        languageProfiles: languageProfiles.items,
+        showLanguageProfile: languageProfiles.items.length > 1,
+        defaultQualityProfileId: addSeries.defaults.qualityProfileId,
+        defaultLanguageProfileId: addSeries.defaults.languageProfileId
       };
 
       if (items.length) {
@@ -50,11 +62,11 @@ function createMapStateToProps() {
 }
 
 const mapDispatchToProps = {
-  setImportSeriesValue,
-  importSeries,
-  clearImportSeries,
-  fetchRootFolders,
-  setAddSeriesDefault
+  dispatchSetImportSeriesValue: setImportSeriesValue,
+  dispatchImportSeries: importSeries,
+  dispatchClearImportSeries: clearImportSeries,
+  dispatchFetchRootFolders: fetchRootFolders,
+  dispatchSetAddSeriesDefault: setAddSeriesDefault
 };
 
 class ImportSeriesConnector extends Component {
@@ -63,23 +75,55 @@ class ImportSeriesConnector extends Component {
   // Lifecycle
 
   componentDidMount() {
+    const {
+      qualityProfiles,
+      languageProfiles,
+      defaultQualityProfileId,
+      defaultLanguageProfileId,
+      dispatchFetchRootFolders,
+      dispatchSetAddSeriesDefault
+    } = this.props;
+
     if (!this.props.rootFoldersPopulated) {
-      this.props.fetchRootFolders();
+      dispatchFetchRootFolders();
+    }
+
+    let setDefaults = false;
+    const setDefaultPayload = {};
+
+    if (
+      !defaultQualityProfileId ||
+      !qualityProfiles.some((p) => p.id === defaultQualityProfileId)
+    ) {
+      setDefaults = true;
+      setDefaultPayload.qualityProfileId = qualityProfiles[0].id;
+    }
+
+    if (
+      !defaultLanguageProfileId ||
+      !languageProfiles.some((p) => p.id === defaultLanguageProfileId)
+    ) {
+      setDefaults = true;
+      setDefaultPayload.languageProfileId = languageProfiles[0].id;
+    }
+
+    if (setDefaults) {
+      dispatchSetAddSeriesDefault(setDefaultPayload);
     }
   }
 
   componentWillUnmount() {
-    this.props.clearImportSeries();
+    this.props.dispatchClearImportSeries();
   }
 
   //
   // Listeners
 
   onInputChange = (ids, name, value) => {
-    this.props.setAddSeriesDefault({ [name]: value });
+    this.props.dispatchSetAddSeriesDefault({ [name]: value });
 
     ids.forEach((id) => {
-      this.props.setImportSeriesValue({
+      this.props.dispatchSetImportSeriesValue({
         id,
         [name]: value
       });
@@ -87,7 +131,7 @@ class ImportSeriesConnector extends Component {
   }
 
   onImportPress = (ids) => {
-    this.props.importSeries({ ids });
+    this.props.dispatchImportSeries({ ids });
   }
 
   //
@@ -111,11 +155,15 @@ const routeMatchShape = createRouteMatchShape({
 ImportSeriesConnector.propTypes = {
   match: routeMatchShape.isRequired,
   rootFoldersPopulated: PropTypes.bool.isRequired,
-  setImportSeriesValue: PropTypes.func.isRequired,
-  importSeries: PropTypes.func.isRequired,
-  clearImportSeries: PropTypes.func.isRequired,
-  fetchRootFolders: PropTypes.func.isRequired,
-  setAddSeriesDefault: PropTypes.func.isRequired
+  qualityProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
+  languageProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
+  defaultQualityProfileId: PropTypes.number.isRequired,
+  defaultLanguageProfileId: PropTypes.number.isRequired,
+  dispatchSetImportSeriesValue: PropTypes.func.isRequired,
+  dispatchImportSeries: PropTypes.func.isRequired,
+  dispatchClearImportSeries: PropTypes.func.isRequired,
+  dispatchFetchRootFolders: PropTypes.func.isRequired,
+  dispatchSetAddSeriesDefault: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(ImportSeriesConnector);
