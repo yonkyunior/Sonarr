@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
@@ -71,6 +70,7 @@ class SeriesSearchInput extends Component {
     return (
       <SeriesSearchResult
         query={query}
+        cleanQuery={jdu.replace(query).toLowerCase()}
         {...item}
       />
     );
@@ -134,14 +134,15 @@ class SeriesSearchInput extends Component {
   onSuggestionsFetchRequested = ({ value }) => {
     const lowerCaseValue = jdu.replace(value).toLowerCase();
 
-    const suggestions = _.filter(this.props.series, (series) => {
-      // Check the title first and if there isn't a match fallback to the alternate titles
+    const suggestions = this.props.series.filter((series) => {
+      // Check the title first and if there isn't a match fallback to
+      // the alternate titles and finally the tags.
 
-      const titleMatch = jdu.replace(series.title).toLowerCase().contains(lowerCaseValue);
-
-      return titleMatch || _.some(series.alternateTitles, (alternateTitle) => {
-        return jdu.replace(alternateTitle.title).toLowerCase().contains(lowerCaseValue);
-      });
+      return (
+        series.cleanTitle.contains(lowerCaseValue) ||
+        series.alternateTitles.some((alternateTitle) => alternateTitle.cleanTitle.contains(lowerCaseValue)) ||
+        series.tags.some((tag) => tag.cleanLabel.contains(lowerCaseValue))
+      );
     });
 
     this.setState({ suggestions });
