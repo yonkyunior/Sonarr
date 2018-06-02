@@ -22,7 +22,6 @@ fi
 # Set permissions on /usr/lib/sonarr
 
 chown -R $USER:$USER /usr/lib/sonarr
-# chmod -R 775 /usr/lib/sonarr
 
 # Start Sonarr automatically
 
